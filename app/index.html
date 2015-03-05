@@ -76,16 +76,22 @@
                 <p>Channel setup</p>
                 <form class="form-horizontal">
                   <div class="form-group">
-                    <label for="channelUrlInput" class="col-sm-4 control-label">URL</label>
+                    <label for="channelUrlInput" class="col-sm-2 control-label">URL</label>
                     <div class="col-sm-6">
                       <input type="text" class="form-control" id="channelUrlInput" placeholder="ws://" ng-model="selectedChannel.properties.url">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="channelCommonPropertiesSwitch" class="col-sm-4 control-label">Common properties</label>
+                    <label for="channelCommonPropertiesSwitch" class="col-sm-2 control-label">Common properties</label>
                     <div class="col-sm-6">
                       <input type="checkbox" data-toggle="switch" data-on-color="warning" id="channelCommonPropertiesSwitch" name="default-switch" class="switch" ng-model="selectedChannel.properties.useCommonProperties" />
                       <input type="text" ng-show="selectedChannel.properties.useCommonProperties" class="form-control spaced-at-top" placeholder="{&quot;key&quot;:&quot;value&quot;}" ng-model="selectedChannel.properties.commonProperties">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="channelShortFormatSwitch" class="col-sm-2 control-label">Use json short format</label>
+                    <div class="col-sm-6">
+                      <input type="checkbox" data-toggle="switch" data-on-color="warning" id="channelShortFormatSwitch" name="default-switch" class="switch" ng-model="state.eventlist.shortFormat" />
                     </div>
                   </div>
                 </form>

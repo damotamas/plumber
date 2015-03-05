@@ -23,7 +23,7 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
       properties: {
         url: 'ws://localhost:9000/api/live',
         useCommonProperties: false,
-        commonProperties: ""
+        commonProperties: ''
       }
     };
 
@@ -136,7 +136,7 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
   $scope.prettyfy = function(json, shortFormat) {
     var format = shortFormat ? '' : '\t';
     return JSON.stringify(json, null, format);
-  }
+  };
 
   /* init */
 
@@ -145,5 +145,12 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
 
   // create a channel by default and select it
   $scope.selectChannel($scope.createChannel());
+
+  // react to some state changes
+  $scope.$watch('state.eventlist.shortFormat', function(){
+    // re-render the event list by copying it
+    var events = angular.copy($scope.selectedChannel.events);
+    $scope.selectedChannel.events = events;
+  }, true);
 
 }]);
