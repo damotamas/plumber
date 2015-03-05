@@ -73,7 +73,7 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
       }
       // build internal event and store
       var event = {
-        timestamp: new Date().getTime,
+        timestamp: new Date().getTime(),
         content: json,
         inward: false
       };
@@ -86,6 +86,12 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
       console.log('[WS]', 'connected');
       $scope.$apply(function(){
         channel.status = 1;
+        var wrapped = {
+          timestamp: new Date().getTime(),
+          system: true,
+          content: 'Connected'
+        };
+        channel.events.push(wrapped);
       });
     };
     channel.socket.onclose = function () {
@@ -106,7 +112,7 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
       $scope.$apply(function(){
         var json = JSON.parse(event.data);
         var wrapped = {
-          timestamp: new Date().getTime,
+          timestamp: new Date().getTime(),
           content: json,
           inward: true
         };
@@ -136,6 +142,10 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
   $scope.prettyfy = function(json, shortFormat) {
     var format = shortFormat ? '' : '\t';
     return JSON.stringify(json, null, format);
+  };
+
+  $scope.formatDate = function(timestamp) {
+    return '(' + new Date(timestamp).toLocaleTimeString() + ')';
   };
 
   /* init */
