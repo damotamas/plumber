@@ -1,5 +1,5 @@
 # plumber
-A thin websocket testing app using AngularJS.
+A thin websocket testing client with JSON frames, built with AngularJS.
 
 Installing
 ----------
