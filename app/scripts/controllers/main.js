@@ -60,7 +60,7 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
     channel.send = function(text) {
       // parse text to json message
       var json = JSON.parse(text);
-      if (channel.properties.useCommonProperties) {
+      if (channel.properties.useCommonProperties && channel.properties.commonProperties.length > 0) {
         var commonProperties = JSON.parse(channel.properties.commonProperties);
         // merge these into the json message
         if (commonProperties) {
