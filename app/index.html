@@ -40,9 +40,6 @@
             </li>
             <!-- <li><a href><span class="fui-plus"></span></a></li> -->
           </ul>
-          <!-- <ul class="nav navbar-nav navbar-right">
-            <li><a href><span class="fui-gear"></span></a></li>
-          </ul> -->
         </div><!--/.nav-collapse -->
       </div>
     </div>
@@ -79,16 +76,16 @@
                 <p>Channel setup</p>
                 <form class="form-horizontal">
                   <div class="form-group">
-                    <label for="channelUrlInput" class="col-sm-2 control-label">URL</label>
+                    <label for="channelUrlInput" class="col-sm-4 control-label">URL</label>
                     <div class="col-sm-6">
                       <input type="text" class="form-control" id="channelUrlInput" placeholder="ws://" ng-model="selectedChannel.properties.url">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="channelHeadersSwitch" class="col-sm-2 control-label">Headers</label>
+                    <label for="channelCommonPropertiesSwitch" class="col-sm-4 control-label">Common properties</label>
                     <div class="col-sm-6">
-                      <input type="checkbox" data-toggle="switch" data-on-color="warning" id="channelHeadersSwitch" name="default-switch" class="switch" ng-model="selectedChannel.properties.useHeaders" />
-                      <input type="text" ng-show="selectedChannel.properties.useHeaders" class="form-control spaced-at-top" placeholder="{key:value}" ng-model="selectedChannel.properties.headers">
+                      <input type="checkbox" data-toggle="switch" data-on-color="warning" id="channelCommonPropertiesSwitch" name="default-switch" class="switch" ng-model="selectedChannel.properties.useCommonProperties" />
+                      <input type="text" ng-show="selectedChannel.properties.useCommonProperties" class="form-control spaced-at-top" placeholder="{&quot;key&quot;:&quot;value&quot;}" ng-model="selectedChannel.properties.commonProperties">
                     </div>
                   </div>
                 </form>
@@ -99,7 +96,7 @@
 
           <!-- event setup -->
           <div class="">
-            <textarea ng-model="toBeSent" class="source-code text-s" ng-disabled="selectedChannel.status<1"></textarea>
+            <textarea ng-model="toBeSent" class="source-code text-s" ng-disabled="selectedChannel.status<1" placeholder="{&quot;key&quot;:&quot;value&quot;}"></textarea>
             <button class="btn btn-embossed btn-warning" ng-click="send()">Send</button>
           </div>
 

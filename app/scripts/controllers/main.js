@@ -22,8 +22,8 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
       events: [],
       properties: {
         url: 'ws://localhost:9000/api/live',
-        useHeaders: false,
-        headers: ''
+        useCommonProperties: false,
+        commonProperties: ""
       }
     };
 
@@ -58,10 +58,20 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
     };
 
     channel.send = function(text) {
+      // parse text to json message
       var json = JSON.parse(text);
+      if (channel.properties.useCommonProperties) {
+        var commonProperties = JSON.parse(channel.properties.commonProperties);
+        // merge these into the json message
+        if (commonProperties) {
+          json = angular.extend(commonProperties, json);
+        }
+      }
+      // send
       if (channel.status === 1) {
         channel.socket.send(JSON.stringify(json));
       }
+      // build internal event and store
       var event = {
         timestamp: new Date().getTime,
         content: json,
