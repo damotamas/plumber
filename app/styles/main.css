@@ -1,0 +1,70 @@
+body {
+  padding-top: 50px;
+}
+
+/* reusables */
+
+.spaced {
+
+}
+
+.spaced-at-bottom {
+  margin-bottom: 20px;
+}
+
+
+.spaced-at-top {
+  margin-top: 20px;
+}
+
+.text-s {
+  font-size: 12px;
+}
+
+.sub-section {
+  border-left: 3px solid #e7e9ec;
+  padding: 0 0 0 16px;
+  margin: 0 0 40px;
+}
+
+/* fixes */
+
+#channelSetup .bootstrap-switch {
+  overflow: inherit;
+}
+
+/* column-left */
+
+.column {
+  padding: 40px 40px;
+}
+
+.event {
+}
+
+.event.event-inward {
+  border-left: 3px solid  #2ECC71;
+}
+
+.event .latest-event {
+  position: absolute;
+  right: 10px;
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #27AE60;
+}
+
+/* column-right */
+
+.column.column-right {
+
+}
+
+.column.column-right textarea {
+  width: 100%;
+  min-height: 200px;
+  resize: vertical;
+}
+

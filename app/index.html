@@ -1,0 +1,140 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>Plumber</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/videojs/dist/video-js/video-js.css" />
+    <link rel="stylesheet" href="bower_components/flat-ui/dist/css/flat-ui.css" />
+    <link rel="stylesheet" href="bower_components/prism/themes/prism.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/highlight.css">
+    <!-- endbuild -->
+  </head>
+  <body ng-app="plumber" ng-controller="MainController" ng-cloak>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    
+    <!-- Static navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+          </button>
+          <a class="navbar-brand" href="#/">Plumber</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li ng-repeat="channel in channels" >
+              <a href>{{ channel.properties.url }} <span class="navbar-new" ng-hide="channel.events.length===0">{{ channel.events.length }}</span></a>
+            </li>
+            <!-- <li><a href><span class="fui-plus"></span></a></li> -->
+          </ul>
+          <!-- <ul class="nav navbar-nav navbar-right">
+            <li><a href><span class="fui-gear"></span></a></li>
+          </ul> -->
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+
+        <!-- left -->
+        <div class="col-sm-4 col-md-4 column column-left">
+
+          <!-- channel status -->
+          <div class="sub-section">
+            Status <a href class="label" ng-click="selectedChannel.toggle()" ng-class="{'label-danger':selectedChannel.status===-1, 'label-warning':selectedChannel.status===0, 'label-success':selectedChannel.status===1}">{{ (selectedChannel.status===-1 ? 'disconnected' : '') + (selectedChannel.status===0 ? 'connecting' : '') + (selectedChannel.status===1 ? 'connected' : '')}}</a>
+          </div>
+
+          <div class="list-group">
+            <a href class="list-group-item event" ng-repeat="event in selectedChannel.events | orderBy:timestamp" ng-class="{'event-inward':event.inward}" ng-click="prepareEvent(event)">
+              <pre class="source-code text-s" highlighted><code class="language-javascript">{{ prettyfy(event.content, state.eventlist.shortFormat) }}</code></pre>
+              <span ng-show="$index===0" class="latest-event"></span>            
+            </a>
+          </div>
+        </div>
+
+        <!-- right -->
+        <div class="col-sm-8 col-md-8 column column-right">
+
+          <!-- channel setup -->
+          <div>
+            <button class="btn btn-embossed pull-right spaced-at-bottom" type="button" data-toggle="collapse" data-target="#channelSetup" aria-expanded="false" aria-controls="collapseExample">
+              <span class="fui-list"></span>
+            </button>
+            <div class="collapse" id="channelSetup">
+              <div class="sub-section">
+                <p>Channel setup</p>
+                <form class="form-horizontal">
+                  <div class="form-group">
+                    <label for="channelUrlInput" class="col-sm-2 control-label">URL</label>
+                    <div class="col-sm-6">
+                      <input type="text" class="form-control" id="channelUrlInput" placeholder="ws://" ng-model="selectedChannel.properties.url">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="channelHeadersSwitch" class="col-sm-2 control-label">Headers</label>
+                    <div class="col-sm-6">
+                      <input type="checkbox" data-toggle="switch" data-on-color="warning" id="channelHeadersSwitch" name="default-switch" class="switch" ng-model="selectedChannel.properties.useHeaders" />
+                      <input type="text" ng-show="selectedChannel.properties.useHeaders" class="form-control spaced-at-top" placeholder="{key:value}" ng-model="selectedChannel.properties.headers">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+
+          <!-- event setup -->
+          <div class="">
+            <textarea ng-model="toBeSent" class="source-code text-s" ng-disabled="selectedChannel.status<1"></textarea>
+            <button class="btn btn-embossed btn-warning" ng-click="send()">Send</button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- build:js(.) scripts/oldieshim.js -->
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <![endif]-->
+    <!-- endbuild -->
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/videojs/dist/video-js/video.js"></script>
+    <script src="bower_components/flat-ui/dist/js/flat-ui.js"></script>
+    <script src="bower_components/prism/prism.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+        <script src="scripts/app.js"></script>
+        <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/directives/highlighted.js"></script>
+        <script src="scripts/directives/switch.js"></script>
+        <!-- endbuild -->
+</body>
+</html>
