@@ -1,6 +1,8 @@
 # plumber
 A thin websocket testing client with JSON frames, built with AngularJS.
 
+![Screenshot](https://lh3.googleusercontent.com/gSkS8W80XoCjFCt-tHq-y8Fagn55FofNNBmEimvbbaaeqxH2zA3Tkm1PLwUk5iPqEAjpIoBtMj4=w1831-h851)
+
 Installing
 ----------
 
