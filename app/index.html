@@ -56,7 +56,7 @@
           </div>
 
           <div class="list-group">
-            <a href class="list-group-item event" ng-repeat="event in selectedChannel.events | orderBy:timestamp" ng-class="{'event-inward':event.inward}" ng-click="prepareEvent(event)">
+            <a href class="list-group-item event" ng-repeat="event in selectedChannel.events | orderBy:timestamp" ng-class="{'event-inward':event.inward, 'disabled':event.system}" ng-click="event.system ? '' : prepareEvent(event)">
               <pre class="source-code text-s" highlighted ng-if="!event.system"><code class="language-javascript">{{ prettyfy(event.content, state.eventlist.shortFormat) }}</code></pre>
               <span class="source-code text-s" ng-if="event.system">{{ event.content }}</span>
               <span class="text-s text-lightgrey">{{ formatDate(event.timestamp) }}</span>
