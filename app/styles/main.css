@@ -4,6 +4,10 @@ body {
 
 /* reusables */
 
+.inline {
+  display: inline-block;
+}
+
 .spaced {
 
 }
@@ -12,9 +16,28 @@ body {
   margin-bottom: 20px;
 }
 
+.spaced-at-bottom-l {
+  margin-bottom: 30px;
+}
 
 .spaced-at-top {
   margin-top: 20px;
+}
+
+.spaced-at-top-l {
+  margin-top: 30px;
+}
+
+.spaced-at-left {
+  margin-left: 20px;
+}
+
+.spaced-at-left-l {
+  margin-left: 30px;
+}
+
+.spaced-at-left-xl {
+  margin-left: 40px;
 }
 
 .text-s {
@@ -34,11 +57,47 @@ body {
   border-left: 3px solid #e7e9ec;
 }
 
+.separator-vertical {
+  width: 2px;
+  height: 15px;
+  vertical-align: middle;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
 /* fixes */
 
 #channelSetup .bootstrap-switch {
   overflow: inherit;
 }
+
+.btn.btn-transparent {
+  color: rgba(0, 0, 0, 0.15);
+  background-color: transparent;
+}
+
+.btn.btn-transparent:hover, .btn.btn-transparent:focus {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.btn.btn-light {
+  color: #34495E;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.btn.btn-light:hover, .btn.btn-transparent:focus {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+#editorLoadFromModelButton .fui-plus {
+  position: relative;
+  top: -2px;
+}
+
+#editorLoadFromModelButton .fui-plus:before {
+  font-size: 9px;
+  color: #f1c40f;
+}
+
 
 /* column-left */
 

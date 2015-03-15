@@ -3,13 +3,17 @@
 angular.module('plumber').controller('MainController', ['$scope', '$timeout', function ($scope, $timeout) {
 
   var defaults = {
-    RECONNECT_DELAY: 5000,
+    RECONNECT_DELAY: 10,
     STATUS_DELAY: 200
   };
 
   $scope.state = {
     eventlist: {
       shortFormat: true
+    },
+    connection: {
+      autoReconnect: true,
+      reconnectDelay: defaults.RECONNECT_DELAY
     }
   };
 
@@ -20,6 +24,7 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
       active: false,
       status: 0, // connecting
       events: [],
+      reconnectPromise: null,
       properties: {
         url: 'ws://localhost:9000/api/live',
         useCommonProperties: false,
@@ -27,9 +32,9 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
       }
     };
 
-    /* handlers */   
+    /* handlers */
 
-    channel.connect = function() { 
+    channel.connect = function() {
       channel.status = 0;
       var socket = new WebSocket(channel.properties.url);
       if (channel.socket) {
@@ -50,6 +55,7 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
     };
 
     channel.toggle = function() {
+      $timeout.cancel(channel.reconnectPromise);
       if (channel.status===-1) {
         channel.connect();
       } else if (channel.status===1) {
@@ -58,6 +64,9 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
     };
 
     channel.send = function(text) {
+      if (!text || text.length === 0) {
+        text = "{}";
+      }
       // parse text to json message
       var json = JSON.parse(text);
       if (channel.properties.useCommonProperties && channel.properties.commonProperties.length > 0) {
@@ -67,13 +76,24 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
           json = angular.extend(commonProperties, json);
         }
       }
+      // apply macros
+      for (var property in json) {
+        if (json.hasOwnProperty(property) && typeof json[property] === 'string') {
+          var replaced = json[property].replace('$uid', channel.utils.uuid());
+          // replace $timestamp with int
+          if (replaced === "$timestamp") {
+            replaced = channel.utils.timestamp();
+          }
+          json[property] = replaced
+        }
+      }
       // send
       if (channel.status === 1) {
         channel.socket.send(JSON.stringify(json));
       }
       // build internal event and store
       var event = {
-        timestamp: new Date().getTime(),
+        timestamp: channel.utils.timestamp(),
         content: json,
         inward: false
       };
@@ -87,7 +107,7 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
       $scope.$apply(function(){
         channel.status = 1;
         var wrapped = {
-          timestamp: new Date().getTime(),
+          timestamp: channel.utils.timestamp(),
           system: true,
           content: 'Connected'
         };
@@ -105,19 +125,34 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
       $scope.$apply(function(){
         $timeout(function(){ channel.status = -1; }, defaults.STATUS_DELAY);
       });
-      $timeout(function(){ channel.connect(); }, defaults.RECONNECT_DELAY);
+      if ($scope.state.connection.autoReconnect) {
+        channel.reconnectPromise = $timeout(function () {
+          channel.connect();
+        }, $scope.state.connection.reconnectDelay * 1000);
+      }
     };
     channel.socket.onmessage = function (event) {
       console.log('[WS]', 'received', event);
       $scope.$apply(function(){
         var json = JSON.parse(event.data);
         var wrapped = {
-          timestamp: new Date().getTime(),
+          timestamp: channel.utils.timestamp(),
           content: json,
           inward: true
         };
         channel.events.push(wrapped);
       });
+    };
+
+    channel.utils = {};
+    channel.utils.uuid = function() {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+      }
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    };
+    channel.utils.timestamp = function() {
+      return new Date().getTime();
     };
 
     // add to channels
@@ -131,12 +166,26 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
     $scope.selectedChannel.active = true;
   };
 
-  $scope.prepareEvent = function(event) {
-    $scope.toBeSent = JSON.stringify(event.content);
+  $scope.editor = {};
+
+  $scope.editor.loadEvent = function(event) {
+    $scope.toBeSent = $scope.prettyfy(event.content);
+  };
+
+  $scope.editor.loadModel = function() {
+    $scope.toBeSent = $scope.prettyfy(JSON.parse($scope.selectedChannel.properties.commonProperties));
+  };
+
+  $scope.editor.clear = function() {
+    $scope.toBeSent = "";
   };
 
   $scope.send = function() {
     $scope.selectedChannel.send($scope.toBeSent);
+  };
+
+  $scope.clearEvents = function() {
+    $scope.selectedChannel.events = [];
   };
 
   $scope.prettyfy = function(json, shortFormat) {
@@ -161,6 +210,14 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
     // re-render the event list by copying it
     var events = angular.copy($scope.selectedChannel.events);
     $scope.selectedChannel.events = events;
+  }, true);
+  $scope.$watch('state.connection.autoReconnect', function(on){
+    if (on && $scope.channels[0].status===-1) {
+      $scope.selectedChannel.connect();
+    } else {
+      // cancel launched reconnects
+      $timeout.cancel($scope.selectedChannel.reconnectPromise);
+    }
   }, true);
 
 }]);
