@@ -134,10 +134,10 @@
 
             <button class="btn btn-embossed btn-warning" ng-click="send()">Send</button>
             <div class="inline spaced-at-left-l">
-              <button class="btn btn-embossed btn-light" ng-click="editor.clear()" ng-show="toBeSent.length > 0"><span class="fui-cross"></span></button>
+              <button title="Clear editor" class="btn btn-embossed btn-light" ng-click="editor.clear()" ng-show="toBeSent.length > 0"><span class="fui-cross"></span></button>
             </div>
             <div class="inline" ng-show="selectedChannel.properties.useCommonProperties && selectedChannel.properties.commonProperties !== ''">
-              <button id="editorLoadFromModelButton" class="btn btn-embossed btn-light" ng-click="editor.loadModel()" ng-show="selectedChannel.status===1"><span class="fui-plus"></span><span class="fui-list-columned"></span></button>
+              <button id="editorLoadFromModelButton" title="Initialize with model" class="btn btn-embossed btn-light" ng-click="editor.loadModel()" ng-show="selectedChannel.status===1"><span class="fui-plus"></span><span class="fui-list-columned"></span></button>
             </div>
 
           </div>
