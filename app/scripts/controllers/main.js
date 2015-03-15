@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('plumber').controller('MainController', ['$scope', '$timeout', function ($scope, $timeout) {
+angular.module('plumber').controller('MainController', ['$window', '$scope', '$timeout', 'localStorageService', function ($window, $scope, $timeout, localStorageService) {
 
   var defaults = {
     RECONNECT_DELAY: 10,
@@ -65,7 +65,7 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
 
     channel.send = function(text) {
       if (!text || text.length === 0) {
-        text = "{}";
+        text = '{}';
       }
       // parse text to json message
       var json = JSON.parse(text);
@@ -81,10 +81,10 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
         if (json.hasOwnProperty(property) && typeof json[property] === 'string') {
           var replaced = json[property].replace('$uid', channel.utils.uuid());
           // replace $timestamp with int
-          if (replaced === "$timestamp") {
+          if (replaced === '$timestamp') {
             replaced = channel.utils.timestamp();
           }
-          json[property] = replaced
+          json[property] = replaced;
         }
       }
       // send
@@ -177,7 +177,7 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
   };
 
   $scope.editor.clear = function() {
-    $scope.toBeSent = "";
+    $scope.toBeSent = '';
   };
 
   $scope.send = function() {
@@ -197,6 +197,34 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
     return '(' + new Date(timestamp).toLocaleTimeString() + ')';
   };
 
+  $scope.openNewInstance = function() {
+    $scope.storeSettings();
+    $window.open($window.location.href, '_blank');
+  };
+
+  $scope.storeSettings = function() {
+    if (localStorageService.isSupported) {
+      var settings = {
+        globalSettings: $scope.state,
+        channelProperties: $scope.selectedChannel.properties
+      };
+      localStorageService.set('settings', settings);
+    }
+  };
+
+  $scope.loadSettings = function() {
+    var settings = localStorageService.get('settings');
+    if (settings) {
+      console.log('[Plumber] Loaded settings from ' + localStorageService.getStorageType(), settings);
+      if (settings.hasOwnProperty('globalSettings')) {
+        $scope.state = angular.extend($scope.state, settings.globalSettings);
+      }
+      if (settings.hasOwnProperty('channelProperties')) {
+        $scope.selectedChannel.properties = angular.extend($scope.selectedChannel.properties, settings.channelProperties);
+      }
+    }
+  };
+
   /* init */
 
   $scope.channels = [];
@@ -212,12 +240,20 @@ angular.module('plumber').controller('MainController', ['$scope', '$timeout', fu
     $scope.selectedChannel.events = events;
   }, true);
   $scope.$watch('state.connection.autoReconnect', function(on){
-    if (on && $scope.channels[0].status===-1) {
+    if (on && $scope.channels[0].status === -1) {
       $scope.selectedChannel.connect();
     } else {
       // cancel launched reconnects
       $timeout.cancel($scope.selectedChannel.reconnectPromise);
     }
   }, true);
+
+  // load settings from localStorage
+  $scope.loadSettings();
+
+  // persist settings to localStorage before window close
+  $window.onbeforeunload = function() {
+    $scope.storeSettings();
+  };
 
 }]);
