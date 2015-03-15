@@ -88,6 +88,37 @@ body {
   color: rgba(0, 0, 0, 0.4);
 }
 
+.popover {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+}
+
+.popover .popover-title {
+  font-size: 12px;
+  line-height: 1.5;
+  background-color: transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.05);
+  border-radius: 0;
+}
+
+.popover .popover-content {
+  color: #888;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.input-with-addon {
+  position: relative;
+}
+
+.input-with-addon .addon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 #editorLoadFromModelButton .fui-plus {
   position: relative;
   top: -2px;
@@ -97,7 +128,6 @@ body {
   font-size: 9px;
   color: #f1c40f;
 }
-
 
 /* column-left */
 
@@ -124,11 +154,7 @@ body {
 
 /* column-right */
 
-.column.column-right {
-
-}
-
-.column.column-right textarea {
+.editor textarea {
   width: 100%;
   min-height: 200px;
   resize: vertical;

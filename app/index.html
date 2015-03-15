@@ -106,7 +106,12 @@
                     <label for="channelCommonPropertiesSwitch" class="col-sm-2 control-label">Model</label>
                     <div class="col-sm-6">
                       <input type="checkbox" data-toggle="switch" data-on-color="warning" id="channelCommonPropertiesSwitch" name="default-switch" class="switch" ng-model="selectedChannel.properties.useCommonProperties" />
-                      <input type="text" ng-show="selectedChannel.properties.useCommonProperties" class="form-control spaced-at-top" placeholder="{&quot;key&quot;:&quot;value&quot;}" ng-model="selectedChannel.properties.commonProperties">
+                      <div class="input-with-addon">
+                        <input id="channelCommonPropertiesInput" type="text" ng-show="selectedChannel.properties.useCommonProperties" class="form-control spaced-at-top" placeholder="{&quot;key&quot;:&quot;value&quot;}" ng-model="selectedChannel.properties.commonProperties">
+                        <div class="addon" ng-show="selectedChannel.properties.useCommonProperties">
+                          <button type="button" class="btn btn-transparent" popover data-toggle="popover" data-placement="right" data-viewport="#channelCommonPropertiesInput" data-trigger="click hover focus" data-content="$timestamp, $uid" title="Macro support">$</button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </form>
@@ -116,16 +121,20 @@
           </div>
 
           <!-- event setup -->
-          <div>
-            <!--ng-disabled="selectedChannel.status<1"-->
-            <textarea ng-model="toBeSent" class="source-code text-s"  placeholder="{&quot;key&quot;:&quot;value&quot;}"></textarea>
+          <div class="editor">
+            <div class="input-with-addon">
+              <textarea id="editorTextArea" class="source-code text-s" ng-model="toBeSent" ng-disabled="selectedChannel.status<1" placeholder="{&quot;key&quot;:&quot;value&quot;}"></textarea>
+              <div class="addon">
+                <button type="button" class="btn btn-transparent" popover data-toggle="popover" data-placement="bottom" data-viewport="#editorTextArea" data-trigger="click hover focus" data-content="$timestamp, $uid" title="Macro support">$</button>
+              </div>
+            </div>
 
             <button class="btn btn-embossed btn-warning" ng-click="send()">Send</button>
             <div class="inline spaced-at-left-l">
               <button class="btn btn-embossed btn-light" ng-click="editor.clear()"><span class="fui-cross"></span></button>
             </div>
             <div class="inline" ng-show="selectedChannel.properties.useCommonProperties && selectedChannel.properties.commonProperties !== ''">
-              <button id="editorLoadFromModelButton" class="btn btn-embossed btn-light" ng-click="editor.loadModel()"><!--<span class="fui-plus">--><span class="fui-plus"></span><span class="fui-list-columned"></span></button>
+              <button id="editorLoadFromModelButton" class="btn btn-embossed btn-light" ng-click="editor.loadModel()"><span class="fui-plus"></span><span class="fui-list-columned"></span></button>
             </div>
 
           </div>
@@ -161,6 +170,7 @@
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/directives/highlighted.js"></script>
+        <script src="scripts/directives/popover.js"></script>
         <script src="scripts/directives/switch.js"></script>
         <!-- endbuild -->
 </body>
