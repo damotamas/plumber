@@ -52,7 +52,11 @@
 
           <!-- channel status -->
           <div class="sub-section">
-            Status <a href class="label" ng-click="selectedChannel.toggle()" ng-class="{'label-danger':selectedChannel.status===-1, 'label-warning':selectedChannel.status===0, 'label-success':selectedChannel.status===1}">{{ (selectedChannel.status===-1 ? 'disconnected' : '') + (selectedChannel.status===0 ? 'connecting' : '') + (selectedChannel.status===1 ? 'connected' : '')}}</a>
+            <div class="pull-left">
+              Status <a href class="label" ng-click="selectedChannel.toggle()" ng-class="{'label-danger':selectedChannel.status===-1, 'label-warning':selectedChannel.status===0, 'label-success':selectedChannel.status===1}">{{ (selectedChannel.status===-1 ? 'disconnected' : '') + (selectedChannel.status===0 ? 'connecting' : '') + (selectedChannel.status===1 ? 'connected' : '')}}</a>
+            </div>
+            <button class="btn btn-transparent pull-right" ng-click="clearEvents()" ng-show="selectedChannel.events.length > 1"><span class="fui-cross"></span></button>
+            <div class="clearfix"></div>
           </div>
 
           <div class="list-group">
@@ -63,7 +67,6 @@
               <span ng-show="$index===0" class="latest-event"></span>
             </a>
           </div>
-          <button class="btn btn-transparent" ng-click="clearEvents()" ng-show="selectedChannel.events.length > 0"><span class="fui-cross"></span></button>
         </div>
 
         <!-- right -->
