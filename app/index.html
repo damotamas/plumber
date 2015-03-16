@@ -110,7 +110,7 @@
                     <div class="col-sm-6">
                       <input type="checkbox" data-toggle="switch" data-on-color="warning" id="channelCommonPropertiesSwitch" name="default-switch" class="switch" ng-model="selectedChannel.properties.useCommonProperties" />
                       <div class="input-with-addon">
-                        <input id="channelCommonPropertiesInput" type="text" ng-show="selectedChannel.properties.useCommonProperties" class="form-control spaced-at-top" placeholder="{&quot;key&quot;:&quot;value&quot;}" ng-model="selectedChannel.properties.commonProperties">
+                        <input id="channelCommonPropertiesInput" type="text" ng-show="selectedChannel.properties.useCommonProperties" class="form-control spaced-at-top source-code" placeholder="{&quot;key&quot;:&quot;value&quot;}" ng-model="selectedChannel.properties.commonProperties">
                         <div class="addon" ng-show="selectedChannel.properties.useCommonProperties">
                           <button type="button" class="btn btn-transparent" popover data-toggle="popover" data-placement="right" data-viewport="#channelCommonPropertiesInput" data-trigger="click hover focus" data-content="$timestamp, $uid" title="Macro support">$</button>
                         </div>
@@ -126,18 +126,20 @@
           <!-- event setup -->
           <div class="editor">
             <div class="input-with-addon">
-              <textarea id="editorTextArea" class="source-code text-s" ng-model="toBeSent" ng-disabled="selectedChannel.status<1" placeholder="{&quot;key&quot;:&quot;value&quot;}"></textarea>
+              <textarea id="editorTextArea" class="source-code text-s" ng-model="toBeSent" ng-disabled="selectedChannel.status<1" placeholder="{&quot;key&quot;:&quot;value&quot;}" enable-tab></textarea>
               <div class="addon">
                 <button type="button" class="btn btn-transparent" popover data-toggle="popover" data-placement="bottom" data-viewport="#editorTextArea" data-trigger="click hover focus" data-content="$timestamp, $uid" title="Macro support">$</button>
               </div>
             </div>
 
             <button class="btn btn-embossed btn-warning" ng-click="send()">Send</button>
-            <div class="inline spaced-at-left-l">
-              <button title="Clear editor" class="btn btn-embossed btn-light" ng-click="editor.clear()" ng-show="toBeSent.length > 0"><span class="fui-cross"></span></button>
+            <div class="inline spaced-at-left-l"></div>
+            <div class="inline" ng-show="toBeSent.length > 0">
+              <button title="Clear editor" class="btn btn-embossed btn-light" ng-click="editor.clear()"><span class="fui-cross"></span></button>
             </div>
-            <div class="inline" ng-show="selectedChannel.properties.useCommonProperties && selectedChannel.properties.commonProperties !== ''">
-              <button id="editorLoadFromModelButton" title="Initialize with model" class="btn btn-embossed btn-light" ng-click="editor.loadModel()" ng-show="selectedChannel.status===1"><span class="fui-plus"></span><span class="fui-list-columned"></span></button>
+            <div class="inline" ng-show="selectedChannel.properties.useCommonProperties">
+              <button id="editorLoadFromModelButton" title="Load from model" class="btn btn-embossed btn-light" ng-click="editor.loadModel()" ng-show="selectedChannel.status===1">Load</button>
+              <button id="editorSaveToModelButton" title="Save to model" class="btn btn-embossed btn-light" ng-click="editor.saveModel()" ng-show="selectedChannel.status===1">Save</button>
             </div>
 
           </div>
@@ -173,6 +175,7 @@
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/directives/enableTab.js"></script>
         <script src="scripts/directives/highlighted.js"></script>
         <script src="scripts/directives/popover.js"></script>
         <script src="scripts/directives/switch.js"></script>

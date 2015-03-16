@@ -176,6 +176,22 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
     $scope.toBeSent = $scope.prettyfy(JSON.parse($scope.selectedChannel.properties.commonProperties));
   };
 
+  $scope.editor.saveModel = function() {
+    var json = JSON.parse($scope.toBeSent);
+    if (json) {
+      for (var property in json) {
+        if (json.hasOwnProperty(property)) {
+          if (property === 'timestamp') {
+            json[property] = '$timestamp';
+          } else if (property === 'uid') {
+            json[property] = '$uid';
+          }
+        }
+      }
+      $scope.selectedChannel.properties.commonProperties = JSON.stringify(json, null, '');
+    }
+  };
+
   $scope.editor.clear = function() {
     $scope.toBeSent = '';
   };

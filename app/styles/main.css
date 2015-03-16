@@ -66,12 +66,12 @@ body {
 
 /* fixes */
 
-#channelSetup .bootstrap-switch {
+.bootstrap-switch {
   overflow: inherit;
 }
 
 .btn.btn-transparent {
-  color: rgba(0, 0, 0, 0.15);
+  color: #aaaaaa;
   background-color: transparent;
 }
 
@@ -119,12 +119,12 @@ body {
   right: 0;
 }
 
-#editorLoadFromModelButton .fui-plus {
+#editorLoadFromModelButton .fui-arrow-right* {
   position: relative;
   top: -2px;
 }
 
-#editorLoadFromModelButton .fui-plus:before {
+#editorLoadFromModelButton .fui-arrow-right:before {
   font-size: 9px;
   color: #f1c40f;
 }
