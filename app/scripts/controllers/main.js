@@ -17,7 +17,7 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
     }
   };
 
-  $scope.createChannel = function() {
+  $scope.createChannel = function () {
 
     var channel = {
       name: 'channel-' + $scope.channels.length,
@@ -33,7 +33,7 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
       }
     };
 
-    var setCookies = function() {
+    var setCookies = function () {
       if (channel.properties.cookies.length > 0) {
         var cookies = JSON.parse(channel.properties.cookies);
         if (cookies) {
@@ -48,7 +48,7 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
 
     /* handlers */
 
-    channel.connect = function() {
+    channel.connect = function () {
       channel.status = 0;
       // set cookies, some might be needed at handshake
       setCookies();
@@ -64,22 +64,22 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
     // connect channel right away
     channel.connect();
 
-    channel.disconnect = function() {
+    channel.disconnect = function () {
       if (channel.status === 1) {
         channel.socket.close();
       }
     };
 
-    channel.toggle = function() {
+    channel.toggle = function () {
       $timeout.cancel(channel.reconnectPromise);
-      if (channel.status===-1) {
+      if (channel.status === -1) {
         channel.connect();
-      } else if (channel.status===1) {
+      } else if (channel.status === 1) {
         channel.disconnect();
       }
     };
 
-    channel.send = function(text) {
+    channel.send = function (text) {
       if (!text || text.length === 0) {
         text = '{}';
       }
@@ -122,7 +122,7 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
 
     channel.socket.onopen = function () {
       console.log('[WS]', 'connected');
-      $scope.$apply(function(){
+      $scope.$apply(function () {
         channel.status = 1;
         var wrapped = {
           timestamp: channel.utils.timestamp(),
@@ -134,14 +134,18 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
     };
     channel.socket.onclose = function () {
       console.log('[WS]', 'closed');
-      $scope.$apply(function(){
-        $timeout(function(){ channel.status = -1; }, defaults.STATUS_DELAY);
+      $scope.$apply(function () {
+        $timeout(function () {
+          channel.status = -1;
+        }, defaults.STATUS_DELAY);
       });
     };
     channel.socket.onerror = function (e) {
       console.log('[WS]', 'error', e);
-      $scope.$apply(function(){
-        $timeout(function(){ channel.status = -1; }, defaults.STATUS_DELAY);
+      $scope.$apply(function () {
+        $timeout(function () {
+          channel.status = -1;
+        }, defaults.STATUS_DELAY);
       });
       if ($scope.state.connection.autoReconnect) {
         channel.reconnectPromise = $timeout(function () {
@@ -151,7 +155,7 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
     };
     channel.socket.onmessage = function (event) {
       console.log('[WS]', 'received', event);
-      $scope.$apply(function(){
+      $scope.$apply(function () {
         var json = JSON.parse(event.data);
         var wrapped = {
           timestamp: channel.utils.timestamp(),
@@ -163,13 +167,14 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
     };
 
     channel.utils = {};
-    channel.utils.uuid = function() {
+    channel.utils.uuid = function () {
       function s4() {
         return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
       }
+
       return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     };
-    channel.utils.timestamp = function() {
+    channel.utils.timestamp = function () {
       return new Date().getTime();
     };
 
@@ -179,22 +184,22 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
     return channel;
   };
 
-  $scope.selectChannel = function(channel) {
+  $scope.selectChannel = function (channel) {
     $scope.selectedChannel = channel;
     $scope.selectedChannel.active = true;
   };
 
   $scope.editor = {};
 
-  $scope.editor.loadEvent = function(event) {
+  $scope.editor.loadEvent = function (event) {
     $scope.toBeSent = $scope.prettyfy(event.content);
   };
 
-  $scope.editor.loadModel = function() {
+  $scope.editor.loadModel = function () {
     $scope.toBeSent = $scope.prettyfy(JSON.parse($scope.selectedChannel.properties.commonProperties));
   };
 
-  $scope.editor.saveModel = function() {
+  $scope.editor.saveModel = function () {
     var json = JSON.parse($scope.toBeSent);
     if (json) {
       for (var property in json) {
@@ -210,33 +215,33 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
     }
   };
 
-  $scope.editor.clear = function() {
+  $scope.editor.clear = function () {
     $scope.toBeSent = '';
   };
 
-  $scope.send = function() {
+  $scope.send = function () {
     $scope.selectedChannel.send($scope.toBeSent);
   };
 
-  $scope.clearEvents = function() {
+  $scope.clearEvents = function () {
     $scope.selectedChannel.events = [];
   };
 
-  $scope.prettyfy = function(json, shortFormat) {
+  $scope.prettyfy = function (json, shortFormat) {
     var format = shortFormat ? '' : '\t';
     return JSON.stringify(json, null, format);
   };
 
-  $scope.formatDate = function(timestamp) {
+  $scope.formatDate = function (timestamp) {
     return '(' + new Date(timestamp).toLocaleTimeString() + ')';
   };
 
-  $scope.openNewInstance = function() {
+  $scope.openNewInstance = function () {
     $scope.storeSettings();
     $window.open($window.location.href, '_blank');
   };
 
-  $scope.storeSettings = function() {
+  $scope.storeSettings = function () {
     if (localStorageService.isSupported) {
       var settings = {
         globalSettings: $scope.state,
@@ -246,7 +251,7 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
     }
   };
 
-  $scope.loadSettings = function() {
+  $scope.loadSettings = function () {
     var settings = localStorageService.get('settings');
     if (settings) {
       console.log('[Plumber] Loaded settings from ' + localStorageService.getStorageType(), settings);
@@ -268,12 +273,12 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
   $scope.selectChannel($scope.createChannel());
 
   // react to some state changes
-  $scope.$watch('state.eventlist.shortFormat', function(){
+  $scope.$watch('state.eventlist.shortFormat', function () {
     // re-render the event list by copying it
     var events = angular.copy($scope.selectedChannel.events);
     $scope.selectedChannel.events = events;
   }, true);
-  $scope.$watch('state.connection.autoReconnect', function(on){
+  $scope.$watch('state.connection.autoReconnect', function (on) {
     if (on && $scope.channels[0].status === -1) {
       $scope.selectedChannel.connect();
     } else {
@@ -286,7 +291,7 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
   $scope.loadSettings();
 
   // persist settings to localStorage before window close
-  $window.onbeforeunload = function() {
+  $window.onbeforeunload = function () {
     $scope.storeSettings();
   };
 
