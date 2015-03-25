@@ -47,7 +47,7 @@
     <div class="container-fluid">
       <div class="row">
 
-        <!-- left -->
+        <!-- left side -->
         <div class="col-sm-4 col-md-4 column column-left">
 
           <!-- channel status -->
@@ -59,6 +59,7 @@
             <div class="clearfix"></div>
           </div>
 
+          <!-- event list -->
           <div class="list-group">
             <a href class="list-group-item event" ng-repeat="event in selectedChannel.events | orderBy:timestamp" ng-class="{'event-inward':event.inward, 'disabled':event.system}" ng-click="event.system ? '' : editor.loadEvent(event)">
               <pre class="source-code text-s" highlighted ng-if="!event.system"><code class="language-javascript">{{ prettyfy(event.content, state.eventlist.shortFormat) }}</code></pre>
@@ -69,7 +70,7 @@
           </div>
         </div>
 
-        <!-- right -->
+        <!-- right side -->
         <div class="col-sm-8 col-md-8 column column-right">
 
           <!-- channel setup -->
@@ -81,12 +82,16 @@
               <div class="sub-section border-left">
                 <p>Channel setup</p>
                 <form class="form-horizontal">
+
+                  <!-- url -->
                   <div class="form-group spaced-at-top-l spaced-at-bottom-l">
                     <label for="channelUrlInput" class="col-sm-2 control-label">URL</label>
                     <div class="col-sm-6">
                       <input type="text" class="form-control" id="channelUrlInput" placeholder="ws://" ng-model="selectedChannel.properties.url">
                     </div>
                   </div>
+
+                  <!-- reconnect -->
                   <div class="form-group spaced-at-bottom-l">
                     <label for="channelAutoReconnectSwitch" class="col-sm-2 control-label">Auto reconnect</label>
                     <div class="col-sm-2">
@@ -99,12 +104,16 @@
                       </div>
                     </div>
                   </div>
+
+                  <!-- json formatting -->
                   <div class="form-group">
                     <label for="channelShortFormatSwitch" class="col-sm-2 control-label">Format json</label>
                     <div class="col-sm-6">
                       <input type="checkbox" data-toggle="switch" data-on-color="warning" id="channelShortFormatSwitch" name="default-switch" class="switch" ng-model="state.eventlist.shortFormat" />
                     </div>
                   </div>
+
+                  <!-- model -->
                   <div class="form-group spaced-at-bottom-l">
                     <label for="channelCommonPropertiesSwitch" class="col-sm-2 control-label">Model</label>
                     <div class="col-sm-6">
@@ -117,6 +126,15 @@
                       </div>
                     </div>
                   </div>
+
+                  <!-- cookies -->
+                  <div class="form-group spaced-at-top-l spaced-at-bottom-l">
+                    <label for="channelCookieInput" class="col-sm-2 control-label">Cookies</label>
+                    <div class="col-sm-6">
+                      <input type="text" class="form-control source-code" id="channelCookieInput" placeholder="{&quot;key&quot;:&quot;value&quot;}" ng-model="selectedChannel.properties.cookies">
+                    </div>
+                  </div>
+
                 </form>
               </div>
             </div>
@@ -161,6 +179,7 @@
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>

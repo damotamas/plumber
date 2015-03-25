@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('plumber').controller('MainController', ['$window', '$scope', '$timeout', 'localStorageService', function ($window, $scope, $timeout, localStorageService) {
+angular.module('plumber').controller('MainController', ['$window', '$scope', '$timeout', '$cookieStore', 'localStorageService', function ($window, $scope, $timeout, $cookieStore, localStorageService) {
 
   var defaults = {
     RECONNECT_DELAY: 10,
@@ -28,7 +28,21 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
       properties: {
         url: 'ws://localhost:9000/api/live',
         useCommonProperties: false,
-        commonProperties: ''
+        commonProperties: '',
+        cookies: ''
+      }
+    };
+
+    var setCookies = function() {
+      if (channel.properties.cookies.length > 0) {
+        var cookies = JSON.parse(channel.properties.cookies);
+        if (cookies) {
+          for (var cookieName in cookies) {
+            $cookieStore.put(cookieName, cookies[cookieName]);
+          }
+        } else {
+          console.log('Malformed json in channel.properties.cookies', channel.properties.cookies);
+        }
       }
     };
 
@@ -36,6 +50,8 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
 
     channel.connect = function() {
       channel.status = 0;
+      // set cookies, some might be needed at handshake
+      setCookies();
       var socket = new WebSocket(channel.properties.url);
       if (channel.socket) {
         socket.onopen = channel.socket.onopen;
@@ -87,6 +103,8 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
           json[property] = replaced;
         }
       }
+      // set cookies
+      setCookies();
       // send
       if (channel.status === 1) {
         channel.socket.send(JSON.stringify(json));

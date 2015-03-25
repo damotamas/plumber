@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('plumber', [
+  'ngCookies',
   'ngAnimate',
   'ngRoute',
   'ngSanitize',
