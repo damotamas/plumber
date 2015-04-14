@@ -113,6 +113,10 @@ body {
   position: relative;
 }
 
+.input-with-addon input {
+  padding-right: 30px;
+}
+
 .input-with-addon .addon {
   position: absolute;
   top: 0;

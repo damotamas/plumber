@@ -9,7 +9,7 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
 
   $scope.state = {
     eventlist: {
-      shortFormat: true
+      prettifyJson: true
     },
     connection: {
       autoReconnect: true,
@@ -196,7 +196,7 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
   };
 
   $scope.editor.loadModel = function () {
-    $scope.toBeSent = $scope.prettyfy(JSON.parse($scope.selectedChannel.properties.commonProperties));
+    $scope.toBeSent = $scope.prettyfy(JSON.parse($scope.selectedChannel.properties.commonProperties), $scope.state.eventlist.prettifyJson);
   };
 
   $scope.editor.saveModel = function () {
@@ -227,8 +227,8 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
     $scope.selectedChannel.events = [];
   };
 
-  $scope.prettyfy = function (json, shortFormat) {
-    var format = shortFormat ? '' : '\t';
+  $scope.prettyfy = function (json, format) {
+    var format = format ? '\t' : '';
     return JSON.stringify(json, null, format);
   };
 
@@ -273,7 +273,7 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
   $scope.selectChannel($scope.createChannel());
 
   // react to some state changes
-  $scope.$watch('state.eventlist.shortFormat', function () {
+  $scope.$watch('state.eventlist.prettifyJson', function () {
     // re-render the event list by copying it
     var events = angular.copy($scope.selectedChannel.events);
     $scope.selectedChannel.events = events;

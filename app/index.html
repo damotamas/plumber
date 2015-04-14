@@ -62,7 +62,8 @@
           <!-- event list -->
           <div class="list-group">
             <a href class="list-group-item event" ng-repeat="event in selectedChannel.events | orderBy:timestamp" ng-class="{'event-inward':event.inward, 'disabled':event.system}" ng-click="event.system ? '' : editor.loadEvent(event)">
-              <pre class="source-code text-s" highlighted ng-if="!event.system"><code class="language-javascript">{{ prettyfy(event.content, state.eventlist.shortFormat) }}</code></pre>
+              <pre class="source-code text-s" highlighted ng-if="!event.system"><code class="language-javascript">{{
+                prettyfy(event.content, state.eventlist.prettifyJson) }}</code></pre>
               <span class="source-code text-s" ng-if="event.system">{{ event.content }}</span>
               <span class="text-s text-lightgrey">{{ formatDate(event.timestamp) }}</span>
               <span ng-show="$index===0" class="latest-event"></span>
@@ -105,11 +106,11 @@
                     </div>
                   </div>
 
-                  <!-- json formatting -->
+                  <!-- prettify json -->
                   <div class="form-group">
-                    <label for="channelShortFormatSwitch" class="col-sm-2 control-label">Format json</label>
+                    <label for="channelPrettifyJsonSwitch" class="col-sm-2 control-label">Prettify JSON</label>
                     <div class="col-sm-6">
-                      <input type="checkbox" data-toggle="switch" data-on-color="warning" id="channelShortFormatSwitch" name="default-switch" class="switch" ng-model="state.eventlist.shortFormat" />
+                      <input type="checkbox" data-toggle="switch" data-on-color="warning" id="channelPrettifyJsonSwitch" name="default-switch" class="switch" ng-model="state.eventlist.prettifyJson" />
                     </div>
                   </div>
 
