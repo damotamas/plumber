@@ -40,10 +40,12 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
           for (var cookieName in cookies) {
             $cookieStore.put(cookieName, cookies[cookieName]);
           }
+          return cookies;
         } else {
           console.log('Malformed json in channel.properties.cookies', channel.properties.cookies);
         }
       }
+      return {};
     };
 
     /* handlers */
@@ -85,17 +87,36 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
       }
       // parse text to json message
       var json = JSON.parse(text);
+      // load model
       if (channel.properties.useCommonProperties && channel.properties.commonProperties.length > 0) {
         var commonProperties = JSON.parse(channel.properties.commonProperties);
-        // merge these into the json message
         if (commonProperties) {
           json = angular.extend(commonProperties, json);
         }
       }
+      // set cookies
+      var cookies = setCookies();
+
       // apply macros
       for (var property in json) {
         if (json.hasOwnProperty(property) && typeof json[property] === 'string') {
+          // replace $uid
           var replaced = json[property].replace('$uid', channel.utils.uuid());
+          // replace $cookies.* based macros
+          if (replaced.indexOf('$cookies') >= 0) {
+            var keys = replaced.split('.');
+            if (keys && keys.length > 1) {
+              var value = angular.copy(cookies);
+              keys.splice(1).forEach(function (key) {
+                if (value.hasOwnProperty(key)) {
+                  value = value[key];
+                }
+              });
+              if (value) {
+                replaced = value;
+              }
+            }
+          }
           // replace $timestamp with int
           if (replaced === '$timestamp') {
             replaced = channel.utils.timestamp();
@@ -103,8 +124,7 @@ angular.module('plumber').controller('MainController', ['$window', '$scope', '$t
           json[property] = replaced;
         }
       }
-      // set cookies
-      setCookies();
+
       // send
       if (channel.status === 1) {
         channel.socket.send(JSON.stringify(json));

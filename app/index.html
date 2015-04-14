@@ -122,7 +122,7 @@
                       <div class="input-with-addon">
                         <input id="channelCommonPropertiesInput" type="text" ng-show="selectedChannel.properties.useCommonProperties" class="form-control spaced-at-top source-code" placeholder="{&quot;key&quot;:&quot;value&quot;}" ng-model="selectedChannel.properties.commonProperties">
                         <div class="addon" ng-show="selectedChannel.properties.useCommonProperties">
-                          <button type="button" class="btn btn-transparent" popover data-toggle="popover" data-placement="right" data-viewport="#channelCommonPropertiesInput" data-trigger="click hover focus" data-content="$timestamp, $uid" title="Macro support">$</button>
+                          <button type="button" class="btn btn-transparent" popover data-toggle="popover" data-placement="right" data-viewport="#channelCommonPropertiesInput" data-trigger="click hover focus" data-content="$timestamp, $uid, $cookies.*" title="Macro support">$</button>
                         </div>
                       </div>
                     </div>
@@ -130,9 +130,9 @@
 
                   <!-- cookies -->
                   <div class="form-group spaced-at-top-l spaced-at-bottom-l">
-                    <label for="channelCookieInput" class="col-sm-2 control-label">Cookies</label>
+                    <label for="channelCookiesInput" class="col-sm-2 control-label">Cookies</label>
                     <div class="col-sm-6">
-                      <input type="text" class="form-control source-code" id="channelCookieInput" placeholder="{&quot;key&quot;:&quot;value&quot;}" ng-model="selectedChannel.properties.cookies">
+                      <input type="text" class="form-control source-code" id="channelCookiesInput" placeholder="{&quot;key&quot;:&quot;value&quot;}" ng-model="selectedChannel.properties.cookies">
                     </div>
                   </div>
 
@@ -147,7 +147,7 @@
             <div class="input-with-addon">
               <textarea id="editorTextArea" class="source-code text-s" ng-model="toBeSent" ng-disabled="selectedChannel.status<1" placeholder="{&quot;key&quot;:&quot;value&quot;}" enable-tab></textarea>
               <div class="addon">
-                <button type="button" class="btn btn-transparent" popover data-toggle="popover" data-placement="bottom" data-viewport="#editorTextArea" data-trigger="click hover focus" data-content="$timestamp, $uid" title="Macro support">$</button>
+                <button type="button" class="btn btn-transparent" popover data-toggle="popover" data-placement="bottom" data-viewport="#editorTextArea" data-trigger="click hover focus" data-content="$timestamp, $uid, $cookies.*" title="Macro support">$</button>
               </div>
             </div>
 
